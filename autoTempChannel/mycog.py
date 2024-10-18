@@ -20,7 +20,7 @@ class MyCog(commands.Cog):
         opgg_obj = OPGG()
 
         summoner: Summoner = opgg_obj.search("Doublelift#NA1")
-        ctx.send(summoner)
+        await ctx.send(summoner._name)
 
     
 
