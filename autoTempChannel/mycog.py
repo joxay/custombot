@@ -17,6 +17,11 @@ class MyCog(commands.Cog):
         """This does stuff!"""
         # Your code will go here
         await ctx.send("I can do stuff!")
+        opgg_obj = OPGG()
+
+        summoner: Summoner = opgg_obj.search("BettaZero#EUW")
+        ctx.send(summoner)
+
     
 
 
