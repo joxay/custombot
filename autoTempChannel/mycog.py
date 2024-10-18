@@ -5,7 +5,7 @@ from opgg.summoner import Summoner
 from opgg.params import Region
 import discord
 
-class MyCog(commands.Cog):
+class JonisZahnrad(commands.Cog):
     """My custom cog"""
 
     def __init__(self, bot):
@@ -26,7 +26,6 @@ class MyCog(commands.Cog):
         if (last_stats.death > last_stats.kill):
             ans = "<@460119724102123529> du inter, " + str(last_stats.kill) + "Kills und " + str(last_stats.death) + " Tode?"
             await ctx.send(ans)
-
     
     @commands.Cog.listener()
     async def on_voice_state_update(member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
