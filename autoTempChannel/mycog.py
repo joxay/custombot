@@ -9,7 +9,7 @@ class MyCog(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        polling2.poll(target=time.time, step=30, timeout=6, poll_forever=True, step_function=self.pollStep())
+        polling2.poll(target=time.time, step=30, timeout=6, poll_forever=True, step_function=self.pollStep)
         
 
     @commands.command()
