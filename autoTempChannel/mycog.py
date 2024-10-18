@@ -23,7 +23,7 @@ class MyCog(commands.Cog):
         await ctx.send(summoner.recent_game_stats[0])
         last_stats = summoner.recent_game_stats[0].myData.stats
         if (last_stats.death > last_stats.kill):
-            ans = "@BettaZero du inter, " + str(last_stats.kill) + "Kills und " + str(last_stats.death) + " Tode?"
+            ans = "<@460119724102123529> du inter, " + str(last_stats.kill) + "Kills und " + str(last_stats.death) + " Tode?"
             await ctx.send(ans)
 
     
