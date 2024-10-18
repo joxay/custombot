@@ -19,8 +19,9 @@ class MyCog(commands.Cog):
         await ctx.send("I can do stuff!")
         opgg_obj = OPGG()
 
-        summoner: Summoner = opgg_obj.search("BettaZero#EUW")
+        summoner: Summoner = opgg_obj.search("BettaZero#EUW", Region.EUW)
         await ctx.send(summoner._name)
+        await ctx.send(summoner.recent_game_stats)
 
     
 
