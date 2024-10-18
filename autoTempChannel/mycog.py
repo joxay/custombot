@@ -22,6 +22,9 @@ class MyCog(commands.Cog):
         summoner: Summoner = opgg_obj.search("BettaZero#EUW", Region.EUW)
         await ctx.send(summoner._name)
         await ctx.send(summoner.recent_game_stats)
+        if (summoner.recent_game_stats[0].kill > summoner.recent_game_stats[0].death):
+            ans = "@BettaZero du inter, " + summoner.recent_game_stats[0].kill + "Kills und " + summoner.recent_game_stats[0].death + " Tode?"
+            await ctx.send(ans)
 
     
 
