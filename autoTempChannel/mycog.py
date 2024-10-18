@@ -27,8 +27,13 @@ class JonisZahnrad(commands.Cog):
             ans = "<@460119724102123529> du inter, " + str(last_stats.kill) + "Kills und " + str(last_stats.death) + " Tode?"
             await ctx.send(ans)
     
-    # @commands.Cog.listener()
-    async def on_voice_state_update(member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+    @commands.Cog.listener()
+    async def on_voice_state_update(
+        self,
+        member: discord.Member,
+        leaving: discord.VoiceState,
+        joining: discord.VoiceState,
+    ):
         print("let me check")
         curr_voice_channel = after.channel
         guild = curr_voice_channel.guild
