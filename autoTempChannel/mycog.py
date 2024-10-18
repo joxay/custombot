@@ -34,16 +34,25 @@ class JonisZahnrad(commands.Cog):
         leaving: discord.VoiceState,
         joining: discord.VoiceState,
     ):
-        
-        print("let me check")
         curr_voice_channel = joining.channel
         guild = curr_voice_channel.guild
-        # new_legacy_text_channel = await guild.create_text_channel(
-        #         name=curr_voice_channel.name.replace("'s ", " "),
-        #         category=curr_voice_channel.category,
-        #         reason="AutoRoom: New legacy text channel needed.",
-        #         # overwrites=perms.overwrites if perms.overwrites else {},
-        # )
+        new_name = curr_voice_channel.name.replace("'s ", " ")
+
+        channel_exists = False
+        for channel in guild.channels:
+            if (channel.type == discord.ChannelType.voice or channel.category != curr_voice_channel.category): continue
+            if(channel.name == new_name):
+                channel_exists = True
+
+        if(not channel_exists):
+            new_legacy_text_channel = await guild.create_text_channel(
+                    name=curr_voice_channel.name.replace("'s ", " "),
+                    category=curr_voice_channel.category,
+                    reason="AutoRoom: New legacy text channel needed.",
+                    # overwrites=perms.overwrites if perms.overwrites else {},
+                )
+        print(leaving)
+        
 
     async def pollStep():
         #Check
