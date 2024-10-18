@@ -40,11 +40,11 @@ class JonisZahnrad(commands.Cog):
 
         channel_exists = False
         for channel in guild.channels:
-            if (channel.type == discord.ChannelType.voice or channel.category != curr_voice_channel.category): continue
-            if(channel.name == new_name):
+            if channel.type == discord.ChannelType.voice or channel.category != curr_voice_channel.category: continue
+            if channel.name == new_name:
                 channel_exists = True
 
-        if(not channel_exists):
+        if not channel_exists:
             new_legacy_text_channel = await guild.create_text_channel(
                     name=curr_voice_channel.name.replace("'s ", " "),
                     category=curr_voice_channel.category,
