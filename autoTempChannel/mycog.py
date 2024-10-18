@@ -38,12 +38,12 @@ class JonisZahnrad(commands.Cog):
         print("let me check")
         curr_voice_channel = joining.channel
         guild = curr_voice_channel.guild
-        new_legacy_text_channel = await guild.create_text_channel(
-                name=curr_voice_channel.name.replace("'s ", " "),
-                category=curr_voice_channel.category,
-                reason="AutoRoom: New legacy text channel needed.",
-                # overwrites=perms.overwrites if perms.overwrites else {},
-            )
+        # new_legacy_text_channel = await guild.create_text_channel(
+        #         name=curr_voice_channel.name.replace("'s ", " "),
+        #         category=curr_voice_channel.category,
+        #         reason="AutoRoom: New legacy text channel needed.",
+        #         # overwrites=perms.overwrites if perms.overwrites else {},
+        # )
 
     async def pollStep():
         #Check
