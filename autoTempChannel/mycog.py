@@ -34,8 +34,9 @@ class JonisZahnrad(commands.Cog):
         leaving: discord.VoiceState,
         joining: discord.VoiceState,
     ):
+        
         print("let me check")
-        curr_voice_channel = after.channel
+        curr_voice_channel = joining.channel
         guild = curr_voice_channel.guild
         new_legacy_text_channel = await guild.create_text_channel(
                 name=curr_voice_channel.name.replace("'s ", " "),
