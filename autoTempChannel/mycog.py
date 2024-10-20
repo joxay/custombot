@@ -1,4 +1,4 @@
-from redbot.core import commands, app_commands
+from redbot.core import commands, app_commands, Config
 import polling2, time
 from opgg.opgg import OPGG
 from opgg.summoner import Summoner
@@ -10,8 +10,13 @@ class JonisZahnrad(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        polling2.poll(target=time.time, step=30, poll_forever=True, step_function=self.pollStep)
-        
+        polling2.poll(
+            target=time.time, step=30, poll_forever=True, step_function=self.pollStep
+        )
+        self.config = Config.get_conf(
+            self, identifier=498465313652, force_registration=True
+        )
+        # self.textChannel = {}
 
     @commands.command()
     async def mycom(self, ctx):
@@ -23,39 +28,62 @@ class JonisZahnrad(commands.Cog):
         await ctx.send(summoner._name)
         await ctx.send(summoner.recent_game_stats[0])
         last_stats = summoner.recent_game_stats[0].myData.stats
-        if (last_stats.death > last_stats.kill):
-            ans = "<@460119724102123529> du inter, " + str(last_stats.kill) + "Kills und " + str(last_stats.death) + " Tode?"
+        if last_stats.death > last_stats.kill:
+            ans = (
+                "<@460119724102123529> du inter, "
+                + str(last_stats.kill)
+                + "Kills und "
+                + str(last_stats.death)
+                + " Tode?"
+            )
             await ctx.send(ans)
-    
+
     @commands.Cog.listener()
     async def on_voice_state_update(
         self,
         member: discord.Member,
-        leaving: discord.VoiceState,
-        joining: discord.VoiceState,
+        before: discord.VoiceState,
+        after: discord.VoiceState,
     ):
-        curr_voice_channel = joining.channel
+        curr_voice_channel = after.channel
         guild = curr_voice_channel.guild
-        new_name = curr_voice_channel.name.replace("'s ", " ")
 
-        channel_exists = False
-        for channel in guild.channels:
-            if channel.type == discord.ChannelType.voice or channel.category != curr_voice_channel.category: continue
-            if channel.name == new_name:
-                channel_exists = True
-
-        if not channel_exists:
-            new_legacy_text_channel = await guild.create_text_channel(
-                    name=curr_voice_channel.name.replace("'s ", " "),
-                    category=curr_voice_channel.category,
-                    reason="AutoRoom: New legacy text channel needed.",
-                    # overwrites=perms.overwrites if perms.overwrites else {},
+        if before.channel is None and after.channel is not None:
+            textID = await self.config.channel(after.channel.id).textID()
+            if textID is None:  # Gibt noch keinen Channel
+                guild = member.guild
+                textchannel = await guild.create_text_channel(
+                    reason="New temp textchannel needed",
+                    name=after.channel.name, category=after.channel.category
                 )
-        print(leaving)
-        
+                await self.config.channel(after.channel.id).textID.set(textchannel.id)
+            else:  # Es gibt schon einen Channel
+                textchannel = guild.get_channel(textID)
+            await textchannel.set_permissions(
+                member,
+                reason="User joined channel with temp textchannel",
+                view_channel=True,
+                read_messages=True,
+                send_messages=True,
+            )
+
+        elif before.channel is not None and after.channel is None:
+            textID = await self.config.channel(before.channel.id).textID()
+            if textID is not None:
+                textchannel = guild.get_channel(textID)
+                await textchannel.set_permissions(
+                    member,
+                    reason="User left channel with temp textchannel",
+                    view_channel=False,
+                    read_messages=False,
+                    send_messages=False,
+                )
+                if len(textchannel.members) == 0:
+                    await textchannel.delete()
+                    await self.config.channel(before.channel.id).textID.clear()
 
     async def pollStep():
-        #Check
+        # Check
         opgg_obj = OPGG()
 
         summoner: Summoner = opgg_obj.search("Doublelift#NA1")
