@@ -4,14 +4,13 @@ from opgg.summoner import Summoner
 from opgg.params import Region
 import discord
 
+
 class JonisZahnrad(commands.Cog):
     """My custom cog"""
 
     def __init__(self, bot):
         self.bot = bot
-        self.config = Config.get_conf(
-            self, identifier=498465313652, force_registration=True
-        )
+        self.config = Config.get_conf(self, identifier=498465313652)
         # self.textChannel = {}
 
     @commands.command()
@@ -45,13 +44,14 @@ class JonisZahnrad(commands.Cog):
         guild = curr_voice_channel.guild
         print(before)
         print(after)
-        if before.channel is None and after.channel is not None: # Channel verlassen
+        if after.channel is not None:  # Channel join
             textID: str = await self.config.channel(after.channel).textID()
             if textID is None:  # Gibt noch keinen Channel
                 guild = member.guild
                 textchannel = await guild.create_text_channel(
                     reason="New temp textchannel needed",
-                    name=after.channel.name, category=after.channel.category
+                    name=after.channel.name,
+                    category=after.channel.category,
                 )
                 await self.config.channel(after.channel).textID.set(str(textchannel.id))
             else:  # Es gibt schon einen Channel
@@ -64,7 +64,7 @@ class JonisZahnrad(commands.Cog):
                 send_messages=True,
             )
 
-        elif before.channel is not None and after.channel is None: # Channel betreten
+        if before.channel.id is not after.channel.id:  # Channel leave
             textID = await self.config.channel(before.channel).textID()
             if textID is not None:
                 textchannel = guild.get_channel(textID)
