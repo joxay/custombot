@@ -10,7 +10,7 @@ class JonisZahnrad(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.config = Config.get_conf(self, identifier=498465313652)
+        self.config = Config.get_conf(self, identifier=49846531365242)
         # self.textChannel = {}
 
     @commands.command()
@@ -40,8 +40,6 @@ class JonisZahnrad(commands.Cog):
         before: discord.VoiceState,
         after: discord.VoiceState,
     ):
-        curr_voice_channel = after.channel
-        guild = curr_voice_channel.guild
         print(before)
         print(after)
         if after.channel is not None:  # Channel join
