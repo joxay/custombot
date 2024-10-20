@@ -10,7 +10,7 @@ class JonisZahnrad(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.config = Config.get_conf(self, identifier=49846531365242)
+        self.config = Config.get_conf(self, identifier=49846531365243)
         # self.textChannel = {}
 
     @commands.command()
