@@ -47,8 +47,9 @@ class JonisZahnrad(commands.Cog):
     ):
         curr_voice_channel = after.channel
         guild = curr_voice_channel.guild
-
-        if before.channel is None and after.channel is not None:
+        print(before)
+        print(after)
+        if before.channel is None and after.channel is not None: # Channel verlassen
             textID = await self.config.channel(after.channel.id).textID()
             if textID is None:  # Gibt noch keinen Channel
                 guild = member.guild
