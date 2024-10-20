@@ -50,6 +50,7 @@ class JonisZahnrad(commands.Cog):
                     reason="New temp textchannel needed",
                     name=after.channel.name,
                     category=after.channel.category,
+                    overwrites={guild.default_role: discord.PermissionOverwrite(view_channel=False)},
                 )
                 await self.config.channel(after.channel).textID.set(str(textchannel.id))
             else:  # Es gibt schon einen Channel
