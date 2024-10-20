@@ -1,5 +1,4 @@
 from redbot.core import commands, app_commands, Config
-import polling2, time
 from opgg.opgg import OPGG
 from opgg.summoner import Summoner
 from opgg.params import Region
@@ -10,9 +9,6 @@ class JonisZahnrad(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        polling2.poll(
-            target=time.time, step=30, poll_forever=True, step_function=self.pollStep
-        )
         self.config = Config.get_conf(
             self, identifier=498465313652, force_registration=True
         )
@@ -50,16 +46,16 @@ class JonisZahnrad(commands.Cog):
         print(before)
         print(after)
         if before.channel is None and after.channel is not None: # Channel verlassen
-            textID = await self.config.channel(after.channel.id).textID()
+            textID: str = await self.config.channel(after.channel).textID()
             if textID is None:  # Gibt noch keinen Channel
                 guild = member.guild
                 textchannel = await guild.create_text_channel(
                     reason="New temp textchannel needed",
                     name=after.channel.name, category=after.channel.category
                 )
-                await self.config.channel(after.channel.id).textID.set(textchannel.id)
+                await self.config.channel(after.channel).textID.set(str(textchannel.id))
             else:  # Es gibt schon einen Channel
-                textchannel = guild.get_channel(textID)
+                textchannel = guild.get_channel(int(textID))
             await textchannel.set_permissions(
                 member,
                 reason="User joined channel with temp textchannel",
@@ -68,8 +64,8 @@ class JonisZahnrad(commands.Cog):
                 send_messages=True,
             )
 
-        elif before.channel is not None and after.channel is None:
-            textID = await self.config.channel(before.channel.id).textID()
+        elif before.channel is not None and after.channel is None: # Channel betreten
+            textID = await self.config.channel(before.channel).textID()
             if textID is not None:
                 textchannel = guild.get_channel(textID)
                 await textchannel.set_permissions(
@@ -81,7 +77,7 @@ class JonisZahnrad(commands.Cog):
                 )
                 if len(textchannel.members) == 0:
                     await textchannel.delete()
-                    await self.config.channel(before.channel.id).textID.clear()
+                    await self.config.channel(before.channel).textID.clear()
 
     async def pollStep():
         # Check
@@ -97,8 +93,4 @@ class JonisZahnrad(commands.Cog):
 
         summoner: Summoner = opgg_obj.search(summoner_name, Region.EUW)
         await interaction.response.send_message(summoner._name)
-        await interaction.response.send_message(summoner.recent_game_stats[0])
-        
-
-        
-
+        # await interaction.response.send_message(summoner.recent_game_stats[0]) # Kann nur eine interaction reagieren
